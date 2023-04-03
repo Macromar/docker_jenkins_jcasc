@@ -1,0 +1,53 @@
+#master:
+#  JenkinsUriPrefix: "/jenkins"
+#unclassified:
+#  location:
+#    url: "http://34.76.163.41/path/"
+
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: ${genuser:-pas}
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+  remotingSecurity:
+    enabled: true
+
+tool:
+  git:
+    installations:
+      - name: Default
+        home: "git"
+  jdk:
+    installations:
+      - name: "myjava"
+        home: "java"
+
+  maven:
+    installations:
+      - name: "M3"
+        properties:
+          - installSource:
+              installers:
+                - maven:
+                    id: "3.9.1"
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope:    GLOBAL
+              id:       github-user
+              username: ${githubuser:-githubUser}
+              password: ${githubpsw:-githubPassw0rd}
+              description: github
+
+jobs:
+  - url: https://raw.githubusercontent.com/Macromar/jenkins_jobs/main/sample.dsl
